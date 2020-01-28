@@ -29,7 +29,7 @@ module.exports = {
     },
 
     async store(request, response) {
-        try {
+        // try {
             const { github_username, techs, latitude, longitude } = request.body;
 
             let dev = await Dev.findOne({ github_username });
@@ -56,9 +56,9 @@ module.exports = {
                 });
             };
             return response.json(dev);
-        } catch (err) {
-            return response.status(400).send({ error: 'Error creating new dev' });
-        }
+        // } catch (err) {
+        //     return response.status(400).send({ error: 'Error creating new dev' });
+        // }
     },    
 
     async update(request, response) {
@@ -97,9 +97,7 @@ module.exports = {
       },
 
     async delete(request, response) {
-        //return response.status(400).send(request.params.devId);
         try {
-            //await Dev.findOneAndDelete(request.params.devId);
             await Dev.findByIdAndDelete(request.params.devId); 
         
             //return response.send('Dev Deletado!!');
