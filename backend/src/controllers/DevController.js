@@ -1,6 +1,7 @@
 const axios = require('axios');
 const Dev = require('../models/Dev');
 const parseStringAsArray = require('../utils/parseStringAsArray');
+const { findConnections, sendMessage } = require('../websocket');
 
 module.exports = {
     async index(request, response) {
@@ -29,7 +30,7 @@ module.exports = {
     },
 
     async store(request, response) {
-        // try {
+        try {
             const { github_username, techs, latitude, longitude } = request.body;
 
             let dev = await Dev.findOne({ github_username });
@@ -54,11 +55,20 @@ module.exports = {
                     techs: techsArray,
                     location,
                 });
-            };
+
+                // Filtrar as conexões que estão no máximo 10km de distância
+                // e que o novo dev tenha pelo menos uma das tecnologias filtradas 
+                const sendSocketMessageTo = findConnections(
+                    { latitude, longitude },
+                    techsArray,
+                );
+
+                sendMessage(sendSocketMessageTo, 'new-dev', dev);
+;            };
             return response.json(dev);
-        // } catch (err) {
-        //     return response.status(400).send({ error: 'Error creating new dev' });
-        // }
+        } catch (err) {
+            return response.status(400).send({ error: 'Error creating new dev' });
+        }
     },    
 
     async update(request, response) {
@@ -100,8 +110,8 @@ module.exports = {
         try {
             await Dev.findByIdAndDelete(request.params.devId); 
         
-            //return response.send('Dev Deletado!!');
-            return response.send();
+            return response.send('Dev Deletado!!');
+            //return response.send();
         } catch (err) {
             return response.status(400).send({ error: 'Error deleting dev' });
         }
