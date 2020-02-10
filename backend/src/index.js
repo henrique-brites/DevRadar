@@ -12,15 +12,18 @@ const server = http.Server(app);
 
 setupWebsocket(server);
  
-mongoose.connect(`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0-mcspc.mongodb.net/week10?retryWrites=true&w=majority`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-});
+mongoose.connect(
+    process.env.MONGO_URL,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false
+    }
+);
 
-app.use(cors());
+app.use(cors({ origin: process.env.REACT_APP_API_URL }));
 app.use(express.json());
 app.use(routes);
 
-server.listen(3333);
+server.listen(process.env.PORT || 3333);

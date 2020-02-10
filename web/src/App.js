@@ -8,6 +8,7 @@ import './Main.css';
 
 import DevForm from './components/DevForm';
 import DevItem from './components/DevItem';
+require('dotenv').config();
 
 function App() {
   const [devs, setDevs] = useState([]);
