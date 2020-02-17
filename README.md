@@ -27,7 +27,7 @@ Clone o projeto em seu computador. Configure o MongoDB e crie uma arquivo **.env
 ```bash
 MONGO_URL: url de conexão com o mongo
 PORT: porta para estartar o servidor 
-# <!-- REACT_APP_API_URL: url que vai acessar a api `cors` -->
+<!-- REACT_APP_API_URL: url que vai acessar a api `cors` -->
 ```
 Para instalar as dependências e executar o **Servidor** (modo desenvolvimento) execute:
 ```bash
