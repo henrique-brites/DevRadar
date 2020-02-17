@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Buscar Devs",
+    "slug": "BuscaDevs",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -15,7 +15,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#12B6E0"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -25,6 +25,18 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "config": {
+        "googleMaps":{
+          "apiKey": "AIzaSyCdKpE2sYzzYSCmvJVCT2lTDMgfwyL_H2g"
+        }   
+      },
+      "package": "com.devpampa.buscadevs",
+      "adaptiveIcon": {
+        "backgroundColor": "#12B6E0",
+        "foregroundImage": "./assets/icon.png"
+      }
     }
   }
 }

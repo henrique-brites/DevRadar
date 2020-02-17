@@ -1,5 +1,5 @@
 import React, { useState,  useEffect } from  'react';
-import { StyleSheet, Image, View, Text, TextInput, TouchableOpacity, Keyboard}  from 'react-native';
+import { StyleSheet, Image, View, Text, TextInput, Platform, TouchableOpacity, Keyboard}  from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -45,8 +45,8 @@ function Main({ navigation }) {
     const { latitude, longitude } = currentRegion;
     connect(
       latitude,
-        longitude,
-        techs,
+      longitude,
+      techs,
     );
   }
 
@@ -57,11 +57,15 @@ function Main({ navigation }) {
       params: {
         latitude,
         longitude,
-        techs
+        techs,
+        //techs: techs.toLowerCase(),
       }
     });
     
-    setDevs(response.data.devs);
+    //console.log(response.data); expo build:android  
+    if (response.data) {
+      setDevs(response.data.devs);
+    }
     setupWebsocket();
   }
 
@@ -71,7 +75,43 @@ function Main({ navigation }) {
   }
 
   if (!currentRegion) {
-    return null;
+    return (
+      <>
+        <View style={styles.disabledLocation}>
+          <Text style={styles.disabledLocationText}>
+            Para utilizar esta aplicação, você precisa habilitar o GPS do seu
+            dispositivo. Caso já esteja ativo, por favor aguarde.
+          </Text>
+
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('LocationHelp', {
+                help_url:
+                  Platform.OS === 'ios'
+                    ? 'https://support.apple.com/pt-br/HT207092'
+                    : 'https://support.google.com/accounts/answer/3467281?hl=pt-BR',
+              })
+            }
+            style={styles.disabledLocationButton}
+          >
+            <Text style={styles.disabledLocationButtonText}>
+              Ativar manualmente
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <Image
+          source={require('../../assets/background.png')}
+          
+          style={{
+            zIndex: -5,
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      </>
+    );
   }
 
   return (
@@ -91,12 +131,16 @@ function Main({ navigation }) {
           >
             <Image 
               style={styles.avatar} 
+              resizeMode="cover"
               source={{ uri: dev.avatar_url }} 
             />
             <Callout onPress={()=> {
-              //navegação
-              navigation.navigate('Profile', { github_username: dev.github_username });
-            }}>
+                //navegação
+                navigation.navigate('Profile', { 
+                  github_username: dev.github_username 
+                });
+              }}
+            >
               <View style={styles.callout}>
                 <Text style={ styles.devName}>{dev.name}</Text>
                 <Text style={styles.devBio}>{dev.bio}</Text>
@@ -108,9 +152,11 @@ function Main({ navigation }) {
       </MapView>
       <View style={styles.searchForm}>
           <TextInput 
+            returnKeyType="done"
+            onKeyPress={loadDevs}
             style={styles.sarchInput}
             placeholder="Buscar devs por techs..."
-            placeholderTextColor="#999"
+            placeholderTextColor="#FFF"
             autoCapitalize="words"
             autoCorrect={false}
             value={techs}
@@ -133,8 +179,8 @@ const styles = StyleSheet.create({
   avatar: {
      width: 54,
      height: 54,
-     borderRadius: 4,
-     borderWidth: 4,
+     borderRadius: 27,
+     borderWidth: 2,
      borderColor: '#FFF',
   },
 
@@ -154,6 +200,7 @@ const styles = StyleSheet.create({
 
   devTechs: {
     marginTop: 5,
+    textTransform: 'capitalize',
   },
 
   searchForm: {
@@ -169,8 +216,8 @@ const styles = StyleSheet.create({
   sarchInput: {
     flex: 1,
     height: 50,
-    backgroundColor: '#FFF',
-    color: '#333',
+    backgroundColor: '#12B6E0',
+    color: '#FFF',
     borderRadius: 25,
     paddingHorizontal: 20,
     fontSize: 16,
@@ -186,12 +233,48 @@ const styles = StyleSheet.create({
   loadButton: {
     width: 50,
     height: 50,
-    backgroundColor: '#8E4DFF',
+    backgroundColor: '#12B6E0',
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 15,
   },
-}) 
+  
+  disabledLocation: {
+    flex: 1,
+    zIndex: 5,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    paddingHorizontal: '10%',
+  },
+
+  disabledLocationText: {
+    alignSelf: 'center',
+    textAlign: 'center',
+    color: '#FFF',
+    fontSize: 16,
+  },
+
+  disabledLocationButton: {
+    marginTop: 20,
+    backgroundColor: '#4FBDEF',
+    borderRadius: 25,
+    width: '100%',
+    padding: 10,
+    maxWidth: 250,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  disabledLocationButtonText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+  },
+});
 
 export default Main;

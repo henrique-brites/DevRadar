@@ -38,9 +38,12 @@ module.exports = {
             if (!dev) {
                 const apiResponse = await axios.get(`https://api.github.com/users/${github_username}`);
         
-                const { name = login, avatar_url, bio } = apiResponse.data;
-            
+                const { name, login, avatar_url, bio } = apiResponse.data;
+                
+                const nameOrLogin = name === null || name === undefined ? login : name;
+
                 const techsArray = parseStringAsArray(techs);
+                //const techsArray = parseStringAsArray(techs.toLowerCase());
             
                 const location = {
                     type: 'Point',
@@ -49,12 +52,12 @@ module.exports = {
             
                 dev = await Dev.create({
                     github_username,
-                    name,
+                    name: nameOrLogin,
                     avatar_url,
                     bio,
                     techs: techsArray,
                     location,
-                });
+                  });
 
                 // Filtrar as conexões que estão no máximo 10km de distância
                 // e que o novo dev tenha pelo menos uma das tecnologias filtradas 
@@ -108,12 +111,26 @@ module.exports = {
 
     async delete(request, response) {
         try {
-            await Dev.findByIdAndDelete(request.params.devId); 
+            const { id } = request.params;
+
+            const dev = await Dev.findOne({ _id: id });
+
+            if (!dev) {
+            return response.json({ error: 'Developer não existe.' });
+            }
+
+            dev.remove();
+
+            const devs = await Dev.find();
+
+            return res.json(devs);
+
+            // await Dev.findByIdAndDelete(request.params.devId); 
         
-            return response.send('Dev Deletado!!');
+            // return response.send('Dev Deletado!!');
             //return response.send();
         } catch (err) {
-            return response.status(400).send({ error: 'Error deleting dev' });
+            return response.status(400).json({ error: 'Error deleting dev.' });
         }
     },
 };

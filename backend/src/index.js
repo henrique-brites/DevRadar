@@ -22,7 +22,7 @@ mongoose.connect(
     }
 );
 
-app.use(cors({ origin: process.env.REACT_APP_API_URL }));
+app.use(cors()); //{ origin: process.env.REACT_APP_API_URL }));
 app.use(express.json());
 app.use(routes);
 

@@ -1,6 +1,6 @@
   import socketio from 'socket.io-client';
 
-  const socket = socketio('http://192.168.1.111:3333', {
+  const socket = socketio('https://apibuscadevs.herokuapp.com', {
     autoConnect: false,
   });
   

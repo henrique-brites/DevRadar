@@ -23,6 +23,13 @@ module.exports = {
         });
         // Busca todos os devs bum raio 10 km
         // Filtrar por tecnologias
-        return response.json({ devs });
-    }
-}
+        //console.log(devs);
+        if (devs.length > 0) {
+            return response.json({ devs });
+            //return response.json(null);
+        }
+        //return response.json({ devs });
+        return response.json(null);
+        
+    },
+};
