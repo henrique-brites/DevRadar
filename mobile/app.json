@@ -29,7 +29,7 @@
     "android": {
       "config": {
         "googleMaps":{
-          "apiKey": "AIzaSyCdKpE2sYzzYSCmvJVCT2lTDMgfwyL_H2g"
+          "apiKey": "*"
         }   
       },
       "package": "com.devpampa.buscadevs",
