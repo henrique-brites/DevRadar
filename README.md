@@ -72,4 +72,4 @@ Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ---
 
-Feito com :purple_heart: by  Henrique Brites :wave:
+Feito com :blue_heart: by  Henrique Brites :wave:
